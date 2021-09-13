@@ -1,0 +1,26 @@
+# docker-compose.yml
+version: '3'
+services:
+
+    nginx:
+        container_name: nginx
+        build: ./nginx
+        image: docker_compose/nginx
+        restart: always
+        ports:
+          - "80:80"
+        volumes:
+          - .:/srv/docker-server
+          - .:/var/log/nginx
+        depends_on:
+          - django
+
+    django:
+        container_name: django
+        build: .
+        image: docker_compose/django
+        restart: always
+        command: uwsgi --ini uwsgi.ini
+        volumes:
+          - .:/srv/docker-server
+          - ./log:/var/log/uwsgi
